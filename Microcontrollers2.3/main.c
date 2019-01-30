@@ -40,34 +40,43 @@ notes:			Looping forever, flipping bits on PORTD
 Version :    	DMK, Initial code
 *******************************************************************/
 {
-	//Opdracht2b();
-	//Opdracht2c();	
+	//OpdrachtB2();
+	OpdrachtB3();	
 	return 1;
 }
 
-void Opdracht2b()
+void OpdrachtB2()
 {
 	DDRD = 0b11111111;			// All pins PORTD are set to output
 	
 	while (1)
 	{
-		PORTD = 0b01000000;
-		wait(500);
-		PORTD = 0b00100000;
-		wait(500);
+		PORTD = 0b01000000;		// Set all leds to 0 except LED of port 7
+		wait(500);				// Wait 500miliseconds
+		PORTD = 0b00100000;		// Set all leds to 0 except LED of port 6
+		wait(500);				// Wait 500miliseconds
 	}
 }
 
-//void Opdracht2c()
-//{
-	//while(1)
-	//{
-		//if(PORTC0 == false)
+void OpdrachtB3()
+{
+	DDRD = 0b11111111;			// All pins PORTD are set to output
+	DDRC = 0b00000000;			// All pins PORTC are set to input
+	
+	while(1)
+	{
+		if(PINC & (1<< PINC0)){
+			PORTD = 0b01000000;		// Set all leds to 0 except LED of port 7
+			wait(500);				// Wait 500 miliseconds
+			PORTD = 0b00000000;		// Set all leds to 0
+			wait(500);
+		}
+		//if(PORTC0 == 0)				// If PortC button is pressed (0) = false
 		//{
-			//PORTD = 0b01000000;
-			//wait(500);
-			//PORTD = 0b00000000;
-			//wait(500);
+			//PORTD = 0b01000000;		// Set all leds to 0 except LED of port 7
+			//wait(500);				// Wait 500 miliseconds
+			//PORTD = 0b00000000;		// Set all leds to 0
+			//wait(500);				// Wait 500 miliseconds
 		//}
-	//}
-//}
+	}
+}
