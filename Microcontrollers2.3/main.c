@@ -9,9 +9,6 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-
-
-
 /******************************************************************/
 void wait( int ms )
 /* 
@@ -41,7 +38,7 @@ Version :    	DMK, Initial code
 *******************************************************************/
 {
 	//OpdrachtB2();
-	OpdrachtB3();	
+	//OpdrachtB3();	
 	return 1;
 }
 
@@ -65,18 +62,11 @@ void OpdrachtB3()
 	
 	while(1)
 	{
-		if(PINC & (1<< PINC0)){
+		if(PINC & (1<< PINC0)){ // Checks if port C0 is pressed = 0;
 			PORTD = 0b01000000;		// Set all leds to 0 except LED of port 7
 			wait(500);				// Wait 500 miliseconds
 			PORTD = 0b00000000;		// Set all leds to 0
 			wait(500);
 		}
-		//if(PORTC0 == 0)				// If PortC button is pressed (0) = false
-		//{
-			//PORTD = 0b01000000;		// Set all leds to 0 except LED of port 7
-			//wait(500);				// Wait 500 miliseconds
-			//PORTD = 0b00000000;		// Set all leds to 0
-			//wait(500);				// Wait 500 miliseconds
-		//}
 	}
 }
