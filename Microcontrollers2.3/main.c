@@ -9,6 +9,10 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
+void OpdrachtB2();
+void OpdrachtB3();
+void OpdrachtB4();
+
 /******************************************************************/
 void wait( int ms )
 /* 
@@ -39,6 +43,7 @@ Version :    	DMK, Initial code
 {
 	//OpdrachtB2();
 	//OpdrachtB3();	
+	OpdrachtB4();
 	return 1;
 }
 
@@ -68,5 +73,23 @@ void OpdrachtB3()
 			PORTD = 0b00000000;		// Set all leds to 0
 			wait(500);
 		}
+	}
+}
+
+// Lichtloop van 8 leds dmv shiften 1
+void OpdrachtB4()
+{
+	DDRD = 0b11111111;
+	int value = 0b0000001;
+
+	while(1)
+	{
+		PORTD = value;
+		value = value << 1;
+		
+		if(value == 0b100000000){
+			value = 0b0000001;	
+		}
+		wait(250);
 	}
 }
