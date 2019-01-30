@@ -38,8 +38,7 @@ Version :    	DMK, Initial code
 *******************************************************************/
 {
 	//OpdrachtB2();
-	//OpdrachtB3();	
-	OpdrachtB6();
+	OpdrachtB3();	
 	return 1;
 }
 
@@ -63,7 +62,7 @@ void OpdrachtB3()
 	
 	while(1)
 	{
-		if(PINC & (1<< PINC0)){		// Checks if port C0 is pressed = 0;
+		if(PINC & (1<< PINC0)){
 			PORTD = 0b01000000;		// Set all leds to 0 except LED of port 7
 			wait(500);				// Wait 500 miliseconds
 			PORTD = 0b00000000;		// Set all leds to 0
@@ -102,3 +101,7 @@ void OpdrachtB6()
 		
 	}
 }
+
+	//OpdrachtB3();	
+	OpdrachtB6();
+		if(PINC & (1<< PINC0)){		// Checks if port C0 is pressed = 0;
