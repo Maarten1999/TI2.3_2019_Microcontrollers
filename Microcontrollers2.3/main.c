@@ -4,9 +4,12 @@
  * Created: 30-1-2019 10:55:25
  * Author : Maarten
  */ 
+#define F_CPU 8e6
 
 #include <avr/io.h>
 #include <util/delay.h>
+
+
 
 
 /******************************************************************/
@@ -37,16 +40,34 @@ notes:			Looping forever, flipping bits on PORTD
 Version :    	DMK, Initial code
 *******************************************************************/
 {
-	
-	DDRD = 0b11111111;			// All pins PORTD are set to output 
+	//Opdracht2b();
+	//Opdracht2c();	
+	return 1;
+}
+
+void Opdracht2b()
+{
+	DDRD = 0b11111111;			// All pins PORTD are set to output
 	
 	while (1)
 	{
-		PORTD = 0xAA;			// Write 10101010b PORTD
-		wait( 250 );				
-		PORTD = 0x55;			// Write 01010101b PORTD
-		wait( 250 );				
+		PORTD = 0b01000000;
+		wait(500);
+		PORTD = 0b00100000;
+		wait(500);
 	}
-
-	return 1;
 }
+
+//void Opdracht2c()
+//{
+	//while(1)
+	//{
+		//if(PORTC0 == false)
+		//{
+			//PORTD = 0b01000000;
+			//wait(500);
+			//PORTD = 0b00000000;
+			//wait(500);
+		//}
+	//}
+//}
