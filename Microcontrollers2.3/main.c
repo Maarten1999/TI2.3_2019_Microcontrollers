@@ -67,11 +67,11 @@ void OpdrachtB3()
 	
 	while(1)
 	{
-		if(PINC & (1<< PINC0)){ // Checks if port C0 is pressed = 0;
+		if(PINC & (1<< PINC0)){
 			PORTD = 0b01000000;		// Set all leds to 0 except LED of port 7
 			wait(500);				// Wait 500 miliseconds
 			PORTD = 0b00000000;		// Set all leds to 0
-			wait(500);
+			wait(500);				// Wait 500 miliseconds
 		}
 	}
 }
@@ -91,5 +91,36 @@ void OpdrachtB4()
 			value = 0b0000001;	
 		}
 		wait(250);
+	}
+}
+
+void OpdrachtB6()
+{
+	DDRD = 0b11111111;			// All pins PORTD are set to output
+	DDRC = 0b00000000;			// All pins PORTC are set to input
+	
+	int PRESSED = 0;
+	int MILLISECONDS = 500;
+	
+	while(1) 
+	{
+		if(PINC & (1<< PINC0))			// Checks if port C0 is pressed = 0;
+		{
+			if(PRESSED == 0)			// If value of pressed was 0
+			{
+				PRESSED = 1;			// Used as a sort of boolean
+				MILLISECONDS = 125;		//Set time to wait to 125 miliseconds
+			}
+			else {						// If PRESSED = 1	
+				PRESSED = 0;			//Set PRESSED back to 0
+				MILLISECONDS = 500;		//Set time to wait back to 500 miliseconds
+			}
+		}
+		
+		PORTD = 0b01000000;		// Set all leds to 0 except LED of port 7
+		wait(MILLISECONDS);		// Wait x miliseconds
+		PORTD = 0b00000000;		// Set all leds to 0
+		wait(MILLISECONDS);		// Wait x miliseconds
+		
 	}
 }
