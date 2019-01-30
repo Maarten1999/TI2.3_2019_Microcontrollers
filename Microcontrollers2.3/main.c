@@ -15,6 +15,7 @@ void OpdrachtB4();
 void OpdrachtB4_V2();
 void OpdrachtB5();
 void OpdrachtB6();
+void OpdrachtB7();
 
 /******************************************************************/
 void wait( int ms )
@@ -45,7 +46,7 @@ Version :    	DMK, Initial code
 *******************************************************************/
 {
 	while(1){
-		OpdrachtB6();
+		OpdrachtB7();
 	}
 	return 1;
 	
@@ -171,4 +172,60 @@ void OpdrachtB6()
 	PORTD = 0b00000000;		// Set all leds to 0
 	wait(MILLISECONDS);		// Wait x miliseconds
 	
+}
+
+void OpdrachtB7() {
+		setCharliePlexingLed(1);
+		wait(500);
+		setCharliePlexingLed(2);
+		wait(500);
+		setCharliePlexingLed(3);
+		wait(500);
+		setCharliePlexingLed(4);
+		wait(500);
+		setCharliePlexingLed(5);
+		wait(500);
+		setCharliePlexingLed(6);
+		wait(500);
+}
+
+void setCharliePlexingLed(int lednr)
+{
+	//pin 1 = A1
+	//pin 2 = B1
+	//pin 3 = C1
+	
+	switch(lednr)
+	{
+		case 1: //led1
+		DDRA = 0b11111011;			// All pins PORTD are set to output except 3 (input)
+		//values:
+		PORTA = 0b00000001;			// Set all leds to 0 except 1
+		break;
+		case 2: //led2
+		DDRA = 0b11111011;
+		//values:
+		PORTA = 0b00000010;
+		break;
+		case 3: //led3
+		DDRA = 0b11111110;
+		//values:
+		PORTA = 0b00000010;
+		break;
+		case 4: //led4
+		DDRA = 0b11111110;
+		//values:
+		PORTA = 0b00000100;
+		break;
+		case 5: //led5
+		DDRA = 0b11111101;
+		//values:
+		PORTA = 0b00000100;
+		break;
+		case 6: //led2
+		DDRA = 0b11111101;
+		//values:
+		PORTA = 0b00000001;
+		break;
+	}
 }
