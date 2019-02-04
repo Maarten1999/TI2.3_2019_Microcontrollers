@@ -81,7 +81,7 @@ void OpdrachtB3()
 // Lichtloop van 8 leds dmv shiften 1
 void OpdrachtB4()
 {
-	DDRD = 0b11111111;
+	DDRD = 0b11111111;		
 	static int value = 0b0000001;
 
 	PORTD = value;
@@ -96,29 +96,30 @@ void OpdrachtB4()
 
 
 void OpdrachtB4_V2(){
-	DDRA = 0b11111111;
-	static int value = 0b00000001;
-	static int turn = 1;
+	DDRA = 0b11111111;				// All pins PORTA are set to output
+	static int value = 0b00000001;	// Initial value of loop light.
+	static int turn = 1;			// Boolean to save the direction
 
 	PORTA = value;
 	if(turn)
-		value = (value << 1);
+		value = (value << 1);		//Bitshift to the left
 	else
-		value = (value >> 1);
-	if(value == 0b10000000)
-		turn = 0;
-	else if(value == 0b00000001)
-		turn = 1;
-	wait(250);
+		value = (value >> 1);		//Bitshift to the right
+	if(value == 0b10000000)			//End of the row
+		turn = 0;					//Switch direction
+	else if(value == 0b00000001)	//Start of the row
+		turn = 1;					//Switch direction
+	wait(250);						//Wait 250 milliseconds
 	
 }
 
-//void OpdrachtB.5 Licht effect
-typedef struct {
+//void OpdrachtB.5 Light effect
+typedef struct {					//Struct that holds the value of the row and the delay
 	unsigned char data;
 	unsigned int delay ;
 } LIGHTEFFECT_STRUCT;
 
+//Array with the values of the light pattern
 LIGHTEFFECT_STRUCT lighteffect[] = {
 	{0x00, 100}, {0x01, 100}, {0x02, 100}, {0x04, 100}, {0x10, 100}, {0x20, 100}, {0x40, 100}, {0x80, 100},
 	{0x00, 100},
@@ -131,15 +132,17 @@ LIGHTEFFECT_STRUCT lighteffect[] = {
 };
 
 void OpdrachtB5(){
-	DDRA = 0b11111111;
+	DDRA = 0b11111111;			// All pins PORTA are set to output
 	
 	int index = 0;
-	while(lighteffect[index].delay != 0){
+	//loops through the array until the value is 0
+	while(lighteffect[index].delay != 0){	
+		// sets the pins of PORTA to the first value in the struct
 		PORTA = lighteffect[index].data;
-		wait(lighteffect[index].delay);
+		// waits the second value of the struct in milliseconds	
+		wait(lighteffect[index].delay);		
 		index++;
 	}
-	
 }
 
 void OpdrachtB6()
