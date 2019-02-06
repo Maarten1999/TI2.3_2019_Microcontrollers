@@ -10,6 +10,14 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
+void wait( int ms )
+{
+	for (int i=0; i<ms; i++)
+	{
+		_delay_ms( 1 );		// library function (max 30 ms at 8MHz)
+	}
+}
+
 const unsigned char Segments[10] =
 {
 	0b00000001, //0
@@ -28,22 +36,26 @@ int currentSegment = 0;
 
 int main(void)
 {
+	
 	DDRA = 0xff;
-
-    while (1) 
+    display(1);
+	while (1) 
     {
 		display(currentSegment);
-		if(currentSegment < 11) {
-			currentSegment++;
-		}
+
+		if(currentSegment < 10) {
+			currentSegment = currentSegment + 1;
+				}
 		else {
 			currentSegment = 0;
 		}
+		
 		wait(1000);	// library function (max 30 ms at 8MHz)
     }
 }
 
 void display(int digit)
 {
+	printf("CurrentDigit: %d", currentSegment);
 	PORTA = Segments[digit];
 }
