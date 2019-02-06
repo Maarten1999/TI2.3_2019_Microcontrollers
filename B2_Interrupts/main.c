@@ -1,5 +1,3 @@
-#define F_CPU 8e6
-
 /*
  * B2_Interrupts.c
  *
@@ -11,8 +9,6 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
-int value;
-int direction;
 int i;
 
 ISR(INT1_vect)
@@ -34,20 +30,15 @@ ISR(INT2_vect)
 int main(void)
 {
 	DDRD = 0xF0;			// PORTD(7:4) output, PORTD(3:0) input
-	DDRA = 0xFF;			// All pins of PORTA are set to output for looplight
+	DDRA = 0xFF;			// All pins of PORTA are set to output for loop light
 	
 	// Init Interrupt hardware
-	EICRA |= 0x2C;			// INT1 falling edge, INT0 rising edge
+	EICRA |= 0x2C;			// INT2 falling edge, INT1 rising edge
 	EIMSK |= 0x06;			// Enable INT2 & INT1
 	
 	// Enable global interrupt system
 	//SREG = 0x80;			// Of direct via SREG of via wrapper
 	sei();
-	
-	//value = 0x01;
-	//direction = 1;
-	
-	PORTA = value;
 	
     /* Replace with your application code */
     while (1) 
