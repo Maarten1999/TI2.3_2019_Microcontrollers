@@ -7,6 +7,10 @@
 
 #include <avr/io.h>
 
+ISR(INT0_vect)
+{
+	
+}
 
 int main(void)
 {
