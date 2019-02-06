@@ -1,3 +1,5 @@
+#define F_CPU 8e6
+
 /*
  * B2_Interrupts.c
  *
