@@ -60,7 +60,6 @@ void OpdrachtB2()
 	wait(500);				// Wait 500miliseconds
 	PORTD = 0b00100000;		// Set all leds to 0 except LED of port 6
 	wait(500);				// Wait 500miliseconds
-	
 }
 
 void OpdrachtB3()
@@ -69,13 +68,12 @@ void OpdrachtB3()
 	DDRC = 0b00000000;			// All pins PORTC are set to input
 	
 	
-	if(PINC & (1<< PINC0)){
+	if(PINC & (1<< PINC0)){		// Checks if port C0 is pressed = 0;
 		PORTD = 0b01000000;		// Set all leds to 0 except LED of port 7
 		wait(500);				// Wait 500 miliseconds
 		PORTD = 0b00000000;		// Set all leds to 0
 		wait(500);				// Wait 500 miliseconds
 	}
-	
 }
 
 // Lichtloop van 8 leds dmv shiften 1
