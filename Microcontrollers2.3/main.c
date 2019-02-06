@@ -46,7 +46,7 @@ Version :    	DMK, Initial code
 *******************************************************************/
 {
 	while(1){
-		OpdrachtB7();
+		OpdrachtB5();
 	}
 	return 1;
 	
@@ -141,6 +141,7 @@ void OpdrachtB5(){
 		wait(lighteffect[index].delay);		
 		index++;
 	}
+	
 }
 
 void OpdrachtB6()
@@ -230,3 +231,4 @@ void setCharliePlexingLed(int lednr)
 		break;
 	}
 }
+	}
