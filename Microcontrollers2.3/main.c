@@ -16,6 +16,7 @@ void OpdrachtB4_V2();
 void OpdrachtB5();
 void OpdrachtB6();
 void OpdrachtB7();
+void setCharliePlexingLed(int lednr);
 
 /******************************************************************/
 void wait( int ms )
