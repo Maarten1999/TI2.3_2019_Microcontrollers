@@ -12,8 +12,8 @@
 void init(void);
 void display_test(void);
 void lcd_strobe_lcd(void);
-
-
-
+void lcd_write_string(char *string);
+void lcd_write_data(unsigned char byte);
+void set_cursor(unsigned int posHex);
 
 #endif /* LCD_H_ */
