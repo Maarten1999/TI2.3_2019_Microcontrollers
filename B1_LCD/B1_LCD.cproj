@@ -123,6 +123,9 @@
     <PostBuildEvent>"$(LOCALAPPDATA)"\..\Roaming\Mikroelektronika\AVRFLASH\AVRFlash.exe -w -pATmega128 -q -f"$(OutputDirectory)\$(OutputFileName).hex"</PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="lcd.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>

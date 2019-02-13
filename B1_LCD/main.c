@@ -7,12 +7,9 @@
 #define F_CPU 8e6
 #include <avr/io.h>
 #include <util/delay.h>
+#include "lcd.h"
 #define LCD_E	3
 #define LCD_RS	2
-
-void init(void);
-void display_test(void);
-void lcd_strobe_lcd(void);
 
 int main(void)
 {
