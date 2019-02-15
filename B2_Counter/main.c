@@ -7,20 +7,12 @@
 #define F_CPU 8e6
 #include <avr/io.h>
 #include <util/delay.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include "lcd.h"
 #define LCD_E	3
 #define LCD_RS	2
-
-void lcd_write_byte(unsigned int byte){
-	PORTC |= (1<<LCD_RS); //set RS to character mode
-	PORTC = byte;
-	lcd_strobe_lcd();
-
-	// Second nibble
-	PORTC = (byte<<4);
-	PORTC |= (1<<LCD_RS);
-	lcd_strobe_lcd();
-}
 
 int main(void)
 {
@@ -36,9 +28,11 @@ int main(void)
     while (1) 
     {
 		clear_display();
-		lcd_write_byte(TCNT2);
+		char string[10];
+		itoa(TCNT2, string, 10);
+		//sprintf(string, "%d", TCNT2); // is beide mogelijk
+		lcd_write_string(string);
 		_delay_ms(1000);
-		//lcd_strobe_lcd();
     }
 }
 
