@@ -22,7 +22,7 @@ void adcInit(void)
 
 	// 7 en 6 bits AREF = VCC : 01
 	// 5 ADLAR enabled : 1
-	// 4 3 2 1 0 channels alleen 0 enabled
+	// 4 3 2 1 0 channels alleen 3 enabled
 	ADMUX = 0b01100011;
 
 	// 7  bit: enable 1
@@ -43,9 +43,9 @@ int main(void)
 	
 	while (1)
 	{
-		ADCSRA |= (1<<6);
-		while(ADCSRA & (1<<6));
-		PORTA = ADCH;
+		ADCSRA |= (1<<6);		//start conversion
+		while(ADCSRA & (1<<6));	//wait until conversion is finished
+		PORTA = ADCH;			//write left 8 bits to PORTA
 		wait(500);
 	}
 }
