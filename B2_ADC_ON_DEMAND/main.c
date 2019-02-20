@@ -1,7 +1,7 @@
 /*
- * B2_ADC_ON_DEMAND.c
+ * B1_ADC_LED.c
  *
- * Created: 20-2-2019 10:29:05
+ * Created: 20-2-2019 10:22:11
  * Author : Maarten
  */ 
 
@@ -49,4 +49,3 @@ int main(void)
 		wait(500);
 	}
 }
-
