@@ -23,7 +23,7 @@ void adcInit(void)
 	// 7 en 6 bits AREF = VCC : 01
 	// 5 ADLAR enabled : 1
 	// 4 3 2 1 0 channels alleen 0 enabled
-	ADMUX = 0b01100001;
+	ADMUX = 0b01100011;
 
 	// 7  bit: enable 1
 	// 6 bit:start 0
