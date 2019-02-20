@@ -34,9 +34,9 @@ void adcInit(void)
 
 int main(void)
 {
-    //PORTF op output
+    //PORTF op input
     DDRF = 0x00;
-    // DDRA en DDRB op input 
+    // DDRA en DDRB op output 
     DDRA = 0xFF;
     DDRB = 0xFF;
     adcInit();
