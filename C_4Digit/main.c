@@ -59,7 +59,7 @@ void spi_slaveDeSelect(unsigned char chipNumber)
 {
 PORTB |= BIT(chipNumber);
 }
-//Microcontrollers – TI2.3 - Opdrachten track 5 - versie 14-03-2016 Pagina 9 van 10
+//Microcontrollers ï¿½ TI2.3 - Opdrachten track 5 - versie 14-03-2016 Pagina 9 van 10
 // Initialize the driver chip (type MAX 7219)
 void displayDriverInit()
 {
@@ -112,9 +112,9 @@ void writeLedDisplay(int value){
 		digitData[2] = (value / 100) % 10;
 		digitData[3] = (value / 1000) % 10;
 		
-		//1 tot 4 adressen
-		for(char i = 1; i < 5; i++) {
-			spi_writeChar(i, digitData[i-1]);
+		for (char i =1; i <= 4; i++)
+		{
+			spi_writeChar(i, digitData[i - 1]);
 		}
 	}
 }
@@ -146,23 +146,17 @@ int main()
 	spi_masterInit(); // Initialize spi module
 	displayDriverInit(); // Initialize display chip
 	
-	// clear display (all zero's)
-	//for (char i =1; i<=4; i++)
-	//{
-		//spi_writeChar(i, 0);
-	//}
 	wait(1000);
-	// write 4-digit data
-	//for (char i =1; i<=4; i++)
-		//{
-			//spi_writeChar(i, (10-i));
-	//wait(1000);
-		//}
-	//wait(1000);
-		//return (1);
-		
-	//C.2
 	writeNegativeLedDisplay(-123);
+	//C counter 0 - 9999
+	//int counter = 1111;
+	//while(1){
+		//writeLedDisplay(counter++);
+		//wait(1000);
+	//}
+		
+	
+	return (1);
 }
 
 
