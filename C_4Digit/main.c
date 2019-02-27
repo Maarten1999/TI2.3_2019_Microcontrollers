@@ -111,8 +111,35 @@ void writeLedDisplay(int value){
 		digitData[1] = (value / 10) % 10;
 		digitData[2] = (value / 100) % 10;
 		digitData[3] = (value / 1000) % 10;
+		
+		//1 tot 4 adressen
+		for(char i = 1; i < 5; i++) {
+			spi_writeChar(i, digitData[i-1]);
+		}
 	}
 }
+
+void writeNegativeLedDisplay(int value) {
+	if(value > 0 || value < -999) {
+		printf("Value is out of range, use a value between -999 and 0!");
+	}
+	spi_writeChar(4, 0x0a); 
+	//0x40); //0x40
+	
+	value = abs(value);
+
+	int digitdata[3] = {0};
+	digitdata[0] = (value % 10);
+	digitdata[1] = (value / 10) % 10;
+	digitdata[2] = (value / 100) % 10;
+
+	//1 tm 3
+	for(char i = 1; i < 4; i++) {
+		spi_writeChar(i, digitdata[i-1]);
+	}
+}
+
+
 int main()
 {
 	DDRB=0x01; // Set PB0 pin as output for display select
@@ -120,19 +147,22 @@ int main()
 	displayDriverInit(); // Initialize display chip
 	
 	// clear display (all zero's)
-	for (char i =1; i<=4; i++)
-	{
-		spi_writeChar(i, 0);
-	}
+	//for (char i =1; i<=4; i++)
+	//{
+		//spi_writeChar(i, 0);
+	//}
 	wait(1000);
 	// write 4-digit data
-	for (char i =1; i<=4; i++)
-		{
-			spi_writeChar(i, (10-i));
-	wait(1000);
-		}
-	wait(1000);
-		return (1);
+	//for (char i =1; i<=4; i++)
+		//{
+			//spi_writeChar(i, (10-i));
+	//wait(1000);
+		//}
+	//wait(1000);
+		//return (1);
+		
+	//C.2
+	writeNegativeLedDisplay(-123);
 }
 
 
