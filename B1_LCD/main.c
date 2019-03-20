@@ -19,7 +19,7 @@ int main(void)
 	
 	set_cursor(0x40);
 	
-	lcd_write_string("I'm fine");
+	lcd_write_string("test test m");
     while (1) 
     {
 		//lcd_strobe_lcd();
