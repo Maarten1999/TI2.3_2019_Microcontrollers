@@ -58,7 +58,15 @@ void sendPulse(void)
 	_delay_us(15);
 	PORTE &= (~(1 << 6));
 }
-	
+
+void buzzSound(void)
+{
+	PORTG = 0xFF;
+	wait(500);
+	PORTG = 0x00;
+	wait(100);
+}
+
 	
 int main(void)
 {
@@ -66,6 +74,9 @@ int main(void)
 	init();
 	
 	DDRE = 0b01000000;
+	
+	// buzzer output
+	DDRG = 0xFF;
 	
 	// Interrupt
 	EICRB |= 0b00000001;
@@ -90,6 +101,8 @@ int main(void)
 		
 		clear_display();
 		lcd_write_string(str);
+		
+		//buzzSound();
 		
 		wait(100);
     }
