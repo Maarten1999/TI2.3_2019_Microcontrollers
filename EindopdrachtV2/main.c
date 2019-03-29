@@ -16,7 +16,7 @@
 
 #include "lcd.h"
 
-void checkInterrupt(void);
+void checkInterrupt(int us);
 
 int currentUS = 0; // 0 or 1;
 int interruptState = 0;
@@ -28,7 +28,12 @@ int issending = 0; //0 or 1
 
 ISR(INT4_vect)
 {
-	checkInterrupt();
+	checkInterrupt(0);
+}
+
+ISR(INT5_vect)
+{
+	checkInterrupt(1);
 }
 
 void wait( int ms )
@@ -40,7 +45,7 @@ void wait( int ms )
 }
 
 
-void checkInterrupt(void)
+void checkInterrupt(int us)
 {
 	if(interruptState == 0) 
 	{
@@ -49,7 +54,7 @@ void checkInterrupt(void)
 	} else {
 		//interruptstate word nooit meer 1;
 		TCCR1B = 0;
-		pulse[currentUS] = TCNT1;
+		pulse[us] = TCNT1;
 		TCNT1 = 0;	
 		interruptState = 0;
 		issending = 0;
@@ -123,9 +128,12 @@ int main(void)
 	DDRG = 0xFF;
 	
 	// Interrupt
-	EICRB |= 0b00000001;
-	EIMSK |= 0b00010000;
+	//EICRB |= 0b00000001;
+	//EIMSK |= 0b00010000;
 	
+	EICRB |= 0b00000101;
+	EIMSK |= 0b00110000;
+
 	TIMSK = (1 << TOIE1);
 	
 	//TCCR1B |= ((1 << CS10));
@@ -140,7 +148,7 @@ int main(void)
     while (1) 
     {
 		if(1 == interruptState) {
-			lcd_write_string("intestate = 1");
+			//lcd_write_string("intestate = 1");
 		}
 		if(0 == issending) {
 			clear_display();
@@ -154,7 +162,7 @@ int main(void)
 			//currentUS = (1 == currentUS) ? 0 : 1;
 			sendPulse(currentUS);
 			char *str = ((1 == currentUS) ? "CurrentUS: 1" : "CurrentUS: 0");
-			lcd_write_string(str);
+			//lcd_write_string(str);
 		}
 		else {
 			//clear_display();
@@ -171,17 +179,17 @@ int main(void)
 			distance = pulse[i] / 58;
 			set_cursor(i * 0x40); // line 1 or 2
 		
-			if(distance > 0) 
+			if(distance >= 0) 
 			{
 				char str[10];
 				//setleds(distance);
 				setExternalLed(distance);
 				itoa(distance, str, 10);
 					
-				//lcd_write_string(str);	
+				lcd_write_string(str);	
 			}
 			else {
-				//lcd_write_string("ERROR");
+				lcd_write_string("ERROR");
 			}
 		}
 		wait(250);
