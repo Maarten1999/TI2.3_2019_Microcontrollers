@@ -90,6 +90,31 @@ void setleds(int distance)
 	}
 }
 
+void setExternalLed(int distance)
+{
+	static int value = 0b0000000;
+	
+	if(distance > 150){
+
+		}else if(distance > 130){
+		PORTD = 0b00000001;
+		} else if(distance > 110){
+		PORTD = 0b00000011;
+		} else if(distance > 90) {
+		PORTD = 0b00000111;
+		} else if(distance > 70) {
+		PORTD = 0b00001111;
+		} else if(distance > 50) {
+		PORTD = 0b00011111;
+		} else if(distance > 30) {
+		PORTD = 0b00111111;
+		} else if(distance > 10) {
+		PORTD = 0b01111111;
+		} else if(distance >= 5) {
+		PORTD = 0b11111111;
+	}
+}
+
 	
 int main(void)
 {
@@ -110,6 +135,7 @@ int main(void)
 	//TCCR1B |= ((1 << CS10));
 	
 	DDRD = 0b11111111;			// All pins PORTD are set to output
+	DDRC = 0b11111111;			// External Leds
 		
 	sei();
 	
