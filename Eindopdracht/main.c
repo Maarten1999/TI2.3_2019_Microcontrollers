@@ -14,12 +14,24 @@
 #include <util/delay.h>
 
 #include "lcd.h"
+#include "ultrasonic.h"
 
-int interruptState = 0;
+//int interruptState = 0;
+//
+//char string[20];
+//int timerTick = 0;
+//int teller = 0;
 
-char string[20];
-int timerTick = 0;
-int teller = 0;
+ISR(INT4_vect)
+{
+	US_InterruptUpdate();
+}
+
+void fastPrint(const char* str)
+{
+	clear_display();
+	lcd_write_string(str);
+}
 
 //ISR(INT6_vect){
 	//teller++;
@@ -37,14 +49,14 @@ int main(void)
 	init();
 	
 	// trigger(0) output en echo(1) input
-	DDRE = 0b00000001;
+	//DDRE = 0b00000001;
 	
 	// Interrupt 
 	//EICRB = 0b00000001;
 	//EIMSK |= 0b00100000;	
 		
 	//TCCR1A = 0x00; // alles nu
-	TCCR1B |= 0x02; //prescaler van 8 
+	//TCCR1B |= 0x02; //prescaler van 8 
 	//TCCR1C = 0x00; //NULLLLLL
 	
 	
@@ -63,8 +75,16 @@ int main(void)
 	//3 echo ontvangen
 	//4 timer stoppen en tijd meten 
 	
-	sei();
+	//sei();
 	
+		DDRE = 0b01000000;
+		
+		EICRB |= 0b00000001;
+		EIMSK |= 0b00010000;
+		TIMSK = (1 << TOIE1);
+		//TCCR1B |= ((1 << CS10));
+		sei();
+		
     while (1) 
     {
 		//teller++;
@@ -73,12 +93,22 @@ int main(void)
 		//
 			//PORTE &= ~(1 << 0);
 			//_delay_us(5);
-			PORTE |= (1 << 0);
-			_delay_us(20);
-			PORTE &= (~(1 << 0));	
+			//PORTE |= (1 << 0);
+			//_delay_us(15);
+			//PORTE &= (~(1 << 0));	
 			//interruptState = 0;
 		
 		
+				US_SendPulse();
+				int16_t dist = 0;
+				dist = US_GetDistance();
+				
+				char str[10];
+
+				itoa(dist, str, 10);
+				
+				fastPrint(str);
+				
 		
 		//int sensorDistance = (((timerTick / 1000000) * 346) * 100) / 2;
 		//itoa(sensorDistance, string, 10);
