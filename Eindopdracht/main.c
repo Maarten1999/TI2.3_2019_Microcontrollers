@@ -21,15 +21,15 @@ char string[20];
 int timerTick = 0;
 int teller = 0;
 
-ISR(INT6_vect){
-	teller++;
-	if(0 == interruptState){
-		TCNT1 = 0;
-		interruptState = 1;
-	} else if(1 == interruptState) {
-		timerTick = TCNT1;
-	}
-}
+//ISR(INT6_vect){
+	//teller++;
+	//if(0 == interruptState){
+		//TCNT1 = 0;
+		//interruptState = 1;
+	//} else if(1 == interruptState) {
+		//timerTick = TCNT1;
+	//}
+//}
 
 int main(void)
 {
@@ -74,7 +74,7 @@ int main(void)
 			//PORTE &= ~(1 << 0);
 			//_delay_us(5);
 			PORTE |= (1 << 0);
-			_delay_us(15);
+			_delay_us(20);
 			PORTE &= (~(1 << 0));	
 			//interruptState = 0;
 		
@@ -84,9 +84,9 @@ int main(void)
 		//itoa(sensorDistance, string, 10);
 		//lcd_write_string(string);
 		int i;
-		for(i = 0; i< 20;i++){
+		for(i = 0; i< 1;i++){
 		
-			_delay_ms(1);
+			_delay_ms(20);
 		}
 	}
 }
