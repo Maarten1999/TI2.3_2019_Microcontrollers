@@ -114,9 +114,9 @@ int main(void)
 		//itoa(sensorDistance, string, 10);
 		//lcd_write_string(string);
 		int i;
-		for(i = 0; i< 20;i++){
+		for(i = 0; i< 1;i++){
 		
-			_delay_ms(1);
+			_delay_ms(20);
 		}
 	}
 }
