@@ -67,6 +67,29 @@ void buzzSound(void)
 	wait(100);
 }
 
+void setleds(int distance)
+{	
+	if(distance > 150){
+		PORTD = 0b00000000;
+		}else if(distance > 130){
+		PORTD = 0b00000001;
+		} else if(distance > 110){
+		PORTD = 0b00000011;
+		} else if(distance > 90) {
+		PORTD = 0b00000111;
+		} else if(distance > 70) {
+		PORTD = 0b00001111;
+		} else if(distance > 50) {
+		PORTD = 0b00011111;
+		} else if(distance > 30) {
+		PORTD = 0b00111111;
+		} else if(distance > 10) {
+		PORTD = 0b01111111;
+		} else if(distance >= 5) {
+		PORTD = 0b11111111;
+	}
+}
+
 	
 int main(void)
 {
@@ -86,6 +109,8 @@ int main(void)
 	
 	//TCCR1B |= ((1 << CS10));
 	
+	DDRD = 0b11111111;			// All pins PORTD are set to output
+		
 	sei();
 	
     /* Replace with your application code */
@@ -95,12 +120,17 @@ int main(void)
 		int16_t distance = 0;
 		distance = pulse / 58;
 		
-		char str[10];
-		
-		itoa(distance, str, 10);
-		
-		clear_display();
-		lcd_write_string(str);
+		if(distance > 0) 
+		{
+			char str[10];
+			
+			setleds(distance);
+					
+			itoa(distance, str, 10);
+					
+			clear_display();
+			lcd_write_string(str);	
+		}
 		
 		//buzzSound();
 		
