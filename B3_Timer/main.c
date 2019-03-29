@@ -12,10 +12,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <math.h>
 
+const float sec_per_tick = 0.032768;
 int overflow_count = 0;
 int set_high = false;
-
+int max_over_flow = 150;
 //ISR (TIMER2_COMPA_vect){
 	//
 //}
@@ -25,10 +27,9 @@ int set_high = false;
 //
 ISR(TIMER0_OVF_vect){
 	overflow_count++;
-	if(6 == overflow_count){
-		set_high = true;
+	if(max_over_flow <= overflow_count){
+		PORTG ^= (1 << 0);
 		overflow_count = 0;
-		TIFR=0x01;
 		TCNT0 = 0x00;
 	}
 }
@@ -48,13 +49,15 @@ int main(void)
 	//
 	//TIMSK2 |= (1 << 1) | (1 << 2);	//set timer interrupts A,B for timer 2
 	//
-	DDRD=0xff;
+	DDRG=0xff;
 	TCNT0 = 0x00;
-	TCCR0 = 0b00000101;
+	TCCR0 = 0b00000111;
 	TIMSK = 0x01;
 
 	sei();
-	PORTD ^= (1 << 4);
+
+	//max_over_flow = round(5 / sec_per_tick);
+	//PORTD ^= (1 << 4);
     while (1) 
     {
 		if(true == set_high){
