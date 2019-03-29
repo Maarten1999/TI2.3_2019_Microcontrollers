@@ -16,26 +16,42 @@
 
 #include "lcd.h"
 
-void checkInterrupt(int us);
+//#define US1 0
+//#define US2 1
 
+void checkInterrupt(void);
+
+//variabels for ultrasonic sensors
 int currentUS = 0; // 0 or 1;
 int interruptState = 0;
 int pulse[] = { 0,0 };
 int issending = 0; //0 or 1
 
+//variabels for buzzer
+const float sec_per_overflow = 0.032768;
+int overflow_count = 0;	//number of 
+int max_overflow = 100;
+
 //echo		: port E4 & port E5
 //trigger	: port E0 & port E1
 
+//Interrupt for first ultrasonic
 ISR(INT4_vect)
 {
-	checkInterrupt(0);
+	checkInterrupt();
 }
 
+//Interrupt for second ultrasonic
 ISR(INT5_vect)
 {
-	checkInterrupt(1);
+	checkInterrupt();
 }
 
+//ISR(TIMER0_OVF_vect){
+//
+//}
+
+//method to wait before code is runned
 void wait( int ms )
 {
 	for (int i=0; i<ms; i++)
@@ -44,23 +60,23 @@ void wait( int ms )
 	}
 }
 
-
-void checkInterrupt(int us)
+//method to handle interrupts of both ultrasonics
+void checkInterrupt(void)
 {
 	if(interruptState == 0) 
 	{
 		TCCR1B |= (1 << CS11);
 		interruptState = 1;
 	} else {
-		//interruptstate word nooit meer 1;
 		TCCR1B = 0;
-		pulse[us] = TCNT1;
+		pulse[currentUS] = TCNT1;
 		TCNT1 = 0;	
 		interruptState = 0;
 		issending = 0;
 	}
 }
 
+//sends pulse to trigger pin of ultrasonics
 void sendPulse(int pin) 
 {
 	issending = 1;
@@ -79,7 +95,7 @@ void buzzSound(void)
 	wait(100);
 }
 
-void setleds(int distance)
+void setleds(uint16_t distance)
 {	
 	if(distance > 150){
 		PORTD = 0b00000000;
@@ -102,9 +118,11 @@ void setleds(int distance)
 	}
 }
 
-void setExternalLed(int distance)
+void setExternalLed(uint16_t distance)
 {	
-	if(distance > 120){
+	if(distance > 150){
+		PORTA = 0b00000000;
+	} else if(distance > 120){
 		PORTA = 0b00000001;
 	} else if(distance > 90){
 		PORTA = 0b00000011;
@@ -128,12 +146,10 @@ int main(void)
 	DDRG = 0xFF;
 	
 	// Interrupt
-	//EICRB |= 0b00000001;
-	//EIMSK |= 0b00010000;
-	
 	EICRB |= 0b00000101;
 	EIMSK |= 0b00110000;
 
+	//TIMER
 	TIMSK = (1 << TOIE1);
 	
 	//TCCR1B |= ((1 << CS10));
@@ -143,48 +159,28 @@ int main(void)
 		
 	sei();
 	
-    /* Replace with your application code */
+    uint16_t distance[2] = {0,0};
 	
     while (1) 
     {
-		if(1 == interruptState) {
-			//lcd_write_string("intestate = 1");
-		}
-		if(0 == issending) {
-			clear_display();
-			if(1 == currentUS) {
-				currentUS = 0;
-			}
-			else {
-				currentUS = 1;
-			}
-			
-			//currentUS = (1 == currentUS) ? 0 : 1;
+		if(0 == issending) {			
+			currentUS = (1 == currentUS) ? 0 : 1;
 			sendPulse(currentUS);
-			char *str = ((1 == currentUS) ? "CurrentUS: 1" : "CurrentUS: 0");
-			//lcd_write_string(str);
-		}
-		else {
-			//clear_display();
-			//lcd_write_string("Sending");
 		}
 		
-		//clear_display();
+		clear_display();
 		
+		//uint16_t smallest_distance = 0;
 		int i;
 		for (i = 0; i < 2; i++)
 		{
-			int16_t distance = 0;
-			
-			distance = pulse[i] / 58;
+			distance[i] = pulse[i] / 58;
 			set_cursor(i * 0x40); // line 1 or 2
-		
-			if(distance >= 0) 
+			
+			if(distance[i] >= 0) 
 			{
 				char str[10];
-				//setleds(distance);
-				setExternalLed(distance);
-				itoa(distance, str, 10);
+				sprintf(str, "US%d: %d", (i + 1), distance[i]);
 					
 				lcd_write_string(str);	
 			}
@@ -192,8 +188,13 @@ int main(void)
 				lcd_write_string("ERROR");
 			}
 		}
+		if(distance[0] > distance[1]) setExternalLed(distance[1]);
+		else setExternalLed(distance[0]);
+		//setleds(smallest_distance);
+		//setExternalLed(smallest_distance);
 		wait(250);
     }
+	
 }
 
 //regel 1: 0x00;
