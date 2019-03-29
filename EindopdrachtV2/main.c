@@ -16,8 +16,6 @@
 
 #include "lcd.h"
 
-//#define US1 0
-//#define US2 1
 
 void checkInterrupt(void);
 
@@ -47,9 +45,14 @@ ISR(INT5_vect)
 	checkInterrupt();
 }
 
-//ISR(TIMER0_OVF_vect){
-//
-//}
+ISR(TIMER0_OVF_vect){
+	overflow_count++;
+	if(max_overflow <= overflow_count){
+		PORTG ^= (1 << 0);
+		overflow_count = 0;
+		TCNT0 = 0x00;
+	}
+}
 
 //method to wait before code is runned
 void wait( int ms )
@@ -140,27 +143,27 @@ int main(void)
 	// LCD init
 	init();
 	
-	DDRE = 0b00000011;
-	
-	// buzzer output
-	DDRG = 0xFF;
-	
+	DDRE = 0b00000011;			//trigger pins on input, the rest on output
+	DDRG = 0xFF;				// All pins are set to output for buzzer;
+	DDRA = 0b11111111;			// All pins PORTB are set to output, for external Leds
+	DDRD = 0b11111111;			// All pins PORTD are set to output, for leds
 	// Interrupt
 	EICRB |= 0b00000101;
 	EIMSK |= 0b00110000;
 
-	//TIMER
-	TIMSK = (1 << TOIE1);
+	//Initialize Timer0 for buzzer
+	TCNT0 = 0x00;
+	TCCR0 = 0b00000111; // set prescaler on 1024 to achieve latest overflow interrupt possible
+
+	//TIMER set overflow enabled for timers0 and 1
+	TIMSK = (1 << TOIE1) | (1 << TOIE0);
 	
 	//TCCR1B |= ((1 << CS10));
-	
-	DDRA = 0b11111111;			// All pins PORTB are set to output, for external Leds
-	DDRD = 0b11111111;			// All pins PORTD are set to output, for leds
 		
 	sei();
 	
     uint16_t distance[2] = {0,0};
-	
+	uint16_t smallest_distance;
     while (1) 
     {
 		if(0 == issending) {			
@@ -170,28 +173,26 @@ int main(void)
 		
 		clear_display();
 		
-		//uint16_t smallest_distance = 0;
+		smallest_distance = 0xFFFF;
 		int i;
 		for (i = 0; i < 2; i++)
 		{
 			distance[i] = pulse[i] / 58;
 			set_cursor(i * 0x40); // line 1 or 2
-			
 			if(distance[i] >= 0) 
 			{
+				if(smallest_distance > distance[i]) smallest_distance = distance[i];
 				char str[10];
 				sprintf(str, "US%d: %d", (i + 1), distance[i]);
-					
 				lcd_write_string(str);	
 			}
 			else {
 				lcd_write_string("ERROR");
 			}
 		}
-		if(distance[0] > distance[1]) setExternalLed(distance[1]);
-		else setExternalLed(distance[0]);
-		//setleds(smallest_distance);
-		//setExternalLed(smallest_distance);
+		
+		setExternalLed(smallest_distance);
+		max_overflow = smallest_distance / 4;
 		wait(250);
     }
 	
