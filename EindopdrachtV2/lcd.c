@@ -31,7 +31,7 @@ void lcd_strobe_lcd(void)
 	_delay_ms(1);
 }
 
-void init(void)
+void init_lcd(void)
 {
 	DDRC = 0xFF;
 	

@@ -9,7 +9,7 @@
 #ifndef LCD_H_
 #define LCD_H_
 
-void init(void);
+void init_lcd(void);
 void display_test(void);
 void lcd_strobe_lcd(void);
 void lcd_write_string(char *string);
