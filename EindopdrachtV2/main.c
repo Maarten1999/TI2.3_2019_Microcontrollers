@@ -15,7 +15,7 @@
 #include <util/delay.h>
 
 #include "lcd.h"
-
+#include "buzzer.h"
 
 void checkInterrupt(void);
 
@@ -29,6 +29,7 @@ int issending = 0; //0 or 1
 const float sec_per_overflow = 0.032768;
 int overflow_count = 0;	//number of 
 int max_overflow = 100;
+int sound_is_playing = 0;
 
 //echo		: port E4 & port E5
 //trigger	: port E0 & port E1
@@ -48,7 +49,15 @@ ISR(INT5_vect)
 ISR(TIMER0_OVF_vect){
 	overflow_count++;
 	if(max_overflow <= overflow_count){
-		PORTG ^= (1 << 0);
+		//PORTB ^= (1 << 5);
+		if(sound_is_playing == 1) {
+			set_sound_buzzer_off();//toggle_buzzer();	
+			sound_is_playing = 0;
+		}
+		else{ 
+			toggle_buzzer();
+			sound_is_playing = 1;
+		}
 		overflow_count = 0;
 		TCNT0 = 0x00;
 	}
@@ -90,13 +99,13 @@ void sendPulse(int pin)
 	PORTE &= (~(1 << pin));
 }
 
-void buzzSound(void)
-{
-	PORTG = 0xFF;
-	wait(500);
-	PORTG = 0x00;
-	wait(100);
-}
+//void buzzSound(void)
+//{
+	//PORTG = 0xFF;
+	//wait(500);
+	//PORTG = 0x00;
+	//wait(100);
+//}
 
 void setleds(uint16_t distance)
 {	
@@ -143,8 +152,10 @@ int main(void)
 	// LCD init
 	init();
 	
-	DDRE = 0b00000011;			//trigger pins on input, the rest on output
-	DDRG = 0xFF;				// All pins are set to output for buzzer;
+	init_buzzer();
+
+	DDRE |= 0b00000011;			//trigger pins on output, the rest on input
+	//DDRG = 0xFF;				// All pins are set to output for buzzer;
 	DDRA = 0b11111111;			// All pins PORTB are set to output, for external Leds
 	DDRD = 0b11111111;			// All pins PORTD are set to output, for leds
 	// Interrupt
@@ -193,6 +204,8 @@ int main(void)
 		
 		setExternalLed(smallest_distance);
 		max_overflow = smallest_distance / 4;
+		set_frequency_buzzer(1000 - smallest_distance);
+		//sound_is_playing = 1;
 		wait(250);
     }
 	
